@@ -5,6 +5,7 @@ This repository contains tools which can be used to setup a Kubernetes lab clust
 It has these prequisites:
 
 - A Debian Linux host with KVM + libvirtd configured
+- 500 GB of disk space for the Debian base image used to create the VMs
 - 4 GB of disk space per VM
 - 4 GiB of RAM per VM
 

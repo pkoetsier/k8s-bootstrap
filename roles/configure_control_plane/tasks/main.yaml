@@ -11,6 +11,18 @@
   args:
     creates: /etc/kubernetes/admin.conf
 
+- name: "Create kubernetes directory"
+  delegate_to: localhost
+  file:
+    path: kubernetes
+    state: directory
+
+- name: "Copy admin.conf"
+  copy:
+    remote_src: true
+    src: /etc/kubernetes/admin.conf
+    dest: kubernetes/admin.conf
+
 - name: "Install CNI"
   shell: kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
 
