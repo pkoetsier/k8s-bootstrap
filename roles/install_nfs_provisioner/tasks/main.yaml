@@ -13,3 +13,5 @@
       nfs:
         server: "{{ nfs_server }}"
         path: "{{ nfs_export }}"
+      storageClass:
+        defaultClass: true
