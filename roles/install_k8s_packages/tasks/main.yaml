@@ -1,0 +1,15 @@
+---
+- name: "Update APT cache"
+  apt:
+    #upgrade: yes
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: "Install K8S packages"
+  ansible.builtin.package:
+    name:
+      - "kubeadm={{ k8s_version }}"
+      - "kubelet={{ k8s_version }}"
+      - "kubectl={{ k8s_version }}"
+    state: present
+  

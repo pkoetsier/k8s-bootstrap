@@ -1,0 +1,5 @@
+---
+- name: "Run kubeadm join"
+  shell: "{{ hostvars[groups['control_plane'][0]]['join_command'] }}"
+  args:
+    creates: /etc/kubernetes/kubelet.conf

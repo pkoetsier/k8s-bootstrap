@@ -1,0 +1,53 @@
+qemu_img:
+  dest: "/var/lib/libvirt/images/{{ vm.hostname }}.qcow2"
+  format: qcow2
+  src: /var/lib/libvirt/install/debian-12-generic-amd64.qcow2
+  url: https://cloud.debian.org/images/cloud/bookworm/daily/20230428-1364/debian-12-generic-amd64-daily-20230428-1364.qcow2
+  #url: https://cloud.debian.org/images/cloud/bullseye/latest/debian-11-generic-amd64.qcow2
+  size: "64G"
+  owner: root
+  group: kvm
+  mode: 660
+
+cloud_localds:
+  dest: "/var/lib/libvirt/images/{{ vm.hostname }}_cloudinit.iso"
+  config_template: "templates/simple_debian/debian.j2"
+  network_config_template: "templates/simple_debian/debian_netconfig.j2"
+  cloud_config:
+    system_info:
+      hostname: "{{ vm.hostname }}"
+      default_user:
+        name: ansible
+        passwd: "{{ ansible_become_hash }}"
+        ssh_authorized_keys:
+          - "{{lookup('file', '.ssh/ansible.pub') }}"
+    network:
+      dns_nameservers:
+        192.168.1.4
+      dns_search:
+        intranet.unicast.nl
+      interface:
+        name:
+          enp1s0
+        address:
+          "{{ vm.ip_address }}"
+        gateway:
+          192.168.1.2
+    disable_cloud_init: false
+    reboot:
+      true
+virt_install_import:
+  wait: 0
+  name: "{{ vm.hostname }}"
+  os_type: Linux
+  os_variant: debiantesting
+  network: bridge:brlan0
+  memory: 4096
+  vcpu: 2
+  graphics: spice
+  disks:
+    - "/var/lib/libvirt/images/{{ vm.hostname }}.qcow2,device=disk"
+    - "/var/lib/libvirt/images/{{ vm.hostname }}_cloudinit.iso,device=cdrom"
+
+virt_install_vm:
+  skip_if_deployed: true

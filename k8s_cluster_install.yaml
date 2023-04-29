@@ -1,0 +1,30 @@
+- name: Install VMs
+  hosts: localhost
+  become: true
+
+  tasks:
+  - name: Install VMs
+    include_role:
+      name: stafwag.virt_install_vm
+    vars:
+      vm:
+        hostname:
+          "{{ item.hostname }}"
+        ip_address:
+          "{{ item.ip_address }}"
+      ansible_become_hash: "$6$Zm1jb3X4YhOKXK.G$CpKtWuFeBvr/YpzY68O4OsawwHmfoq/rZMiB7Fk07mthODithlwkPruKobTcZjxuTP2NQ2PM.KEFilIoDVmK80"
+    pre_tasks:
+    - name: Load the vm template
+      include_vars: debian_vm_template.yaml
+    - name: display qemu_img
+      debug:
+        msg: 
+          - "qemu_img: {{ qemu_img }}"
+    - name: download install image
+      ansible.builtin.get_url:
+        url:  "{{ qemu_img.url }}"
+        dest: "{{ qemu_img.src }}"
+        mode: "0444"
+        force: no
+    loop:
+      { hostname: "tstdebian", ip_address: "192.168.1.70/24" }

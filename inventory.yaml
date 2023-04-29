@@ -1,0 +1,29 @@
+all:
+  vars:
+    hosts_entries:
+    - "192.168.1.70	epota-control"
+    - "192.168.1.71	epota-node1"
+    - "192.168.1.72	epota-node2"
+    - "192.168.1.73	epota-node3"
+    k8s_version: "1.25.9-00"
+    environment_variables:
+      KUBECONFIG: "/etc/kubernetes/admin.conf"
+
+control_plane:
+  hosts:
+    epota-control:
+      ansible_host: 192.168.1.70
+      ip_address: 192.168.1.70/24
+      primary: true
+
+workers:
+  hosts:
+    epota-node1:
+      ansible_host: 192.168.1.71
+      ip_address: 192.168.1.71/24
+    epota-node2:
+      ansible_host: 192.168.1.72
+      ip_address: 192.168.1.72/24
+    epota-node3:
+      ansible_host: 192.168.1.73
+      ip_address: 192.168.1.73/24

@@ -1,0 +1,52 @@
+---
+- name: "Add nodes to /etc/hosts"
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ item }}"
+  with_items:
+    "{{ hosts_entries }}"
+
+- name: "Download GPG key"
+  ansible.builtin.get_url:
+    url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+    dest: "/etc/apt/keyrings/kubernetes-archive-keyring.gpg"
+    mode: "0444"
+    force: no
+    
+- name: "Create directoris"
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+  - "/etc/containerd"
+
+- name: "Copy OS/containerd config files"
+  ansible.builtin.copy:
+    src:  "{{ item }}"
+    dest: "/{{ item }}"
+  loop:
+  - etc/modules-load.d/br_netfilter.conf
+  - etc/sysctl.d/k8s.conf
+  - etc/containerd/config.toml
+  - etc/crictl.yaml
+  - etc/apt/sources.list.d/kubernetes.list
+  notify:
+    Reboot
+
+- name: "Update APT cache"
+  apt:
+    #upgrade: yes
+    update_cache: yes
+    cache_valid_time: 3600
+    
+- name: "Install prereq packages"
+  ansible.builtin.package:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - containerd
+    state: latest
+  notify:
+    Reboot
+    
+- meta: flush_handlers

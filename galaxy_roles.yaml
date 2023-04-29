@@ -1,0 +1,8 @@
+---
+- name: stafwag.libvirt
+- name: stafwag.virt_install_vm
+  src:  https://github.com/pkoetsier/ansible-role-virt_install_vm.git
+- name: stafwag.qemu_img
+- name: stafwag.cloud_localds
+  src:  https://github.com/pkoetsier/ansible-role-cloud_localds.git
+- name: stafwag.virt_install_import

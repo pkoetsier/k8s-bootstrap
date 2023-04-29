@@ -1,0 +1,30 @@
+---
+- name: "Copy kubeadm config files"
+  copy:
+    src:  "{{ item }}"
+    dest: "/{{ item }}"
+  loop:
+  - etc/kubernetes/kubeadm-config.yaml
+
+- name: "Run kubeadm init"
+  shell: kubeadm init --config /etc/kubernetes/kubeadm-config.yaml
+  args:
+    creates: /etc/kubernetes/admin.conf
+
+- name: "Install CNI"
+  shell: kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+
+- name: "Fetch join command"
+  block:  
+  - shell: kubeadm token create --print-join-command
+    register: join_command_result
+  - debug:
+      msg:
+      - "join_command_result: {{ join_command_result }}"
+  - set_fact:
+      join_command: "{{ join_command_result.stdout }}"
+  - debug:
+      msg:
+      - "join_command: {{ join_command }}"
+  when: 
+  - primary|bool is true

@@ -1,0 +1,37 @@
+- name: "Install Kubernetes"
+  hosts: all
+  serial: 6
+  become: true
+  gather_facts: no
+  environment: "{{ environment_variables }}"
+
+  tasks:
+  - name: "Prepare {{ inventory_hostname_short }} for K8S"
+    include_role:
+      name: prepare_for_k8s
+  - name: "Install K8S packages"
+    include_role:
+      name: install_k8s_packages
+
+- name: "Configure control-plane"
+  hosts: control_plane
+  serial: 1
+  become: true
+  gather_facts: no
+  environment: "{{ environment_variables }}"
+  tasks:
+  - name: "Configure control-plane"
+    include_role:
+      name: configure_control_plane
+
+- name: "Configure workers"
+  hosts: workers
+  serial: 1
+  become: true
+  gather_facts: no
+  environment: "{{ environment_variables }}"
+  tasks:
+  - name: "Configure workers"
+    include_role:
+      name: configure_workers
+ 
