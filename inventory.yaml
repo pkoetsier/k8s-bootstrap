@@ -8,14 +8,16 @@ all:
     k8s_version: "1.25.9-00"
     environment_variables:
       KUBECONFIG: "/etc/kubernetes/admin.conf"
-
+    nfs_server: "192.168.1.108"
+    nfs_export: "/exports/epota"
+    
 control_plane:
   hosts:
     epota-control:
       ansible_host: 192.168.1.70
       ip_address: 192.168.1.70/24
       primary: true
-
+    
 workers:
   hosts:
     epota-node1:

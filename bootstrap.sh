@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-PREREQ_PACKAGES="ansible"
+PREREQ_PACKAGES="ansible curl"
 
 function msg {
     level=0
@@ -54,10 +54,23 @@ function create_ssh_key {
 }
 
 function install_k8s_cluster {
-   ansible-playbook -i inventory.yaml install_vms.yaml || die "failed to install VMs"
+   ansible-playbook -v -i inventory.yaml install_vms.yaml || die "failed to install VMs"
    sleep 60
-   ansible-playbook -i inventory.yaml install_kubernetes.yaml || die "failed to install K8S cluster"
+   ansible-playbook -v -i inventory.yaml install_kubernetes.yaml || die "failed to install K8S cluster"
+   ansible-playbook -v -i inventory.yaml install_storage_provisioners.yaml || die "failed to install storage provisioners"
 }
+
+function install_helm {
+  [ -e bin/helm ] && return 0
+
+  [ -d bin ] || mkdir bin || die "failed to create the bin directory"
+  curl -fsSL -o bin/get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 || die "failed to download get_helm.sh"
+  chmod a+rx bin/get_helm.sh
+  PATH="${PATH}:bin" HELM_INSTALL_DIR=bin bin/get_helm.sh || die "failed to install helm"
+
+  return 0
+}
+
 
 # Main
 install_prereqs
@@ -65,3 +78,4 @@ install_ansible_galaxy_roles || die "failed to install the needed Ansible galaxy
 create_ssh_key
 #passwd_hash
 install_k8s_cluster
+install_helm

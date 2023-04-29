@@ -13,15 +13,22 @@
 
 - name: "Create kubernetes directory"
   delegate_to: localhost
-  file:
-    path: kubernetes
+  ansible.builtin.file:
+    path: "kubernetes"
     state: directory
+  become: false
 
-- name: "Copy admin.conf"
-  copy:
-    remote_src: true
+- name: "Fetch admin.conf"
+  ansible.builtin.fetch:
+    flat: true
     src: /etc/kubernetes/admin.conf
-    dest: kubernetes/admin.conf
+    dest: kubernetes/
+
+- name: Set permision on admin.conf
+  delegate_to: localhost
+  ansible.builtin.file:
+    path: "kubernetes/admin.conf"
+    mode: "0400"
 
 - name: "Install CNI"
   shell: kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml

@@ -1,5 +1,6 @@
 .ssh/
 kubernetes/
+bin/
 
 # VI(M) and emacs backups
 *~

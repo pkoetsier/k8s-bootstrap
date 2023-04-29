@@ -45,6 +45,7 @@
       - apt-transport-https
       - ca-certificates
       - containerd
+      - nfs-common
     state: latest
   notify:
     Reboot
