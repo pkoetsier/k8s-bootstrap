@@ -1,0 +1,12 @@
+- name: Install provisioners
+  hosts: localhost
+  become: false
+  gather_facts: yes
+  environment:
+    KUBECONFIG: "{{ playbook_dir }}/kubernetes/admin.conf"
+    PATH: "{{ ansible_env.PATH }}:{{ playbook_dir }}/bin"
+
+  tasks:
+  - name: "Install logging and monitoring"
+    include_role:
+      name: install_logmon

@@ -58,6 +58,7 @@ function install_k8s_cluster {
    sleep 60
    ansible-playbook -v -i inventory.yaml install_kubernetes.yaml || die "failed to install K8S cluster"
    ansible-playbook -v -i inventory.yaml install_storage_provisioners.yaml || die "failed to install storage provisioners"
+   ansible-playbook -v -i inventory.yaml install_logmon.yaml || die "failed to install logging & monitoring"
 }
 
 function install_helm {
@@ -77,5 +78,5 @@ install_prereqs
 install_ansible_galaxy_roles || die "failed to install the needed Ansible galaxy roles"
 create_ssh_key
 #passwd_hash
-install_k8s_cluster
 install_helm
+install_k8s_cluster

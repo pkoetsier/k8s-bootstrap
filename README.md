@@ -8,7 +8,7 @@ It has these prequisites:
 - An NFS export acessible to all VMs with root squash disabled for use by the nfs-subdir-external-provisioner.
 - 500 GB of disk space for the Debian base image used to create the VMs.
 - 4 GB of disk space per VM.
-- 4 GiB of RAM per VM.
+- 8 GiB of RAM per VM.
 
 ### Usage
 - `inventory.yaml` contains the list of VMs which will be provisioned, their IP addresses, the K8S version and the NFS server details. Adapt it to your needs.

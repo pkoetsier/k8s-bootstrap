@@ -42,7 +42,7 @@ virt_install_import:
   os_type: Linux
   os_variant: debiantesting
   network: bridge:brlan0
-  memory: 4096
+  memory: 8192
   vcpu: 2
   graphics: spice
   disks:

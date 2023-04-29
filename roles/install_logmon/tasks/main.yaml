@@ -1,0 +1,38 @@
+---
+- name: "Add metrics-serve helm repo"
+  kubernetes.core.helm_repository:
+    name: metrics-server
+    repo_url: https://kubernetes-sigs.github.io/metrics-server/
+
+- name: "Install metrics-server"
+  kubernetes.core.helm:
+    name: metrics-server
+    namespace: kube-system
+    chart_ref: metrics-server/metrics-server
+    values:
+      args:
+        - --kubelet-insecure-tls
+    
+- name: "Add Loki helm repo"
+  kubernetes.core.helm_repository:
+    name: loki
+    repo_url: https://grafana.github.io/helm-charts
+
+- name: "Create loki namespace"
+  shell: kubectl get ns loki > /dev/null || kubectl create ns loki
+    
+- name: "Install loki"
+  kubernetes.core.helm:
+    name: loki
+    namespace: loki
+    chart_ref: loki/loki
+    values:
+      loki:
+        commonConfig:
+          replication_factor: 1
+        storage:
+          type: 'filesystem'
+      singleBinary:
+        replicas: 1
+
+
