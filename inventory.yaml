@@ -5,7 +5,7 @@ all:
     - "192.168.1.71	epota-node1"
     - "192.168.1.72	epota-node2"
     - "192.168.1.73	epota-node3"
-    k8s_version: "1.25.9-00"
+    k8s_version: "1.26.9-00"
     environment_variables:
       KUBECONFIG: "/etc/kubernetes/admin.conf"
     nfs_server: "192.168.1.108"

@@ -9,7 +9,7 @@
 - name: "Download GPG key"
   ansible.builtin.get_url:
     url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
-    dest: "/etc/apt/keyrings/kubernetes-archive-keyring.gpg"
+    dest: "/etc/apt/trusted.gpg.d/kubernetes-archive-keyring.asc"
     mode: "0444"
     force: no
     
