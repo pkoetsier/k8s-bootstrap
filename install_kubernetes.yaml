@@ -4,6 +4,8 @@
   become: true
   gather_facts: no
   environment: "{{ environment_variables }}"
+  vars:
+  - k8s_release: "{{ k8s_version | regex_replace('^([0-9]+\\.[0-9]+).*', '\\1') }}"
 
   tasks:
   - name: "Prepare {{ inventory_hostname_short }} for K8S"

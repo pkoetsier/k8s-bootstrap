@@ -1,6 +1,6 @@
 ---
 - name: "Copy kubeadm config files"
-  copy:
+  template:
     src:  "{{ item }}"
     dest: "/{{ item }}"
   loop:
